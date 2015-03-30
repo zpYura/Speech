@@ -1,1 +1,14 @@
 D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\Speech_Example.exe.config
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\Speech_Example.exe
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\Speech_Example.pdb
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\Alvas.Audio.dll
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\NAudio.dll
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\NPlot.dll
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\Alvas.Audio.xml
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\NAudio.xml
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.csprojResolveAssemblyReference.cache
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.Form1.resources
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.Properties.Resources.resources
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.csproj.GenerateResource.Cache
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.exe
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.pdb
