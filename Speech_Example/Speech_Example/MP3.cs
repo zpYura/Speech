@@ -28,6 +28,12 @@ namespace Speech_Example
             set { normalizedData = value; }
         }
 
+        public Frame [] Frames
+        {
+            get { return frames; }
+           
+        }
+
         public double[] Matrix
         {
             get { return Matrix_mfcc; }
