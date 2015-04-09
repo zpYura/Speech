@@ -11,21 +11,54 @@ namespace Speech_Example
 {
     class MP3
     {
-        int[] rawData;
-        double[] normalizedData;
-
+        //int[] rawData;
+        /// <summary>
+        /// Нормализованные данные
+        /// </summary>
+        double[] normalizedData=null;
+        /// <summary>
+        /// Содержание мр3 файла
+        /// </summary>
+        byte[] bdata=null;
         double maxVal=0;
         double minVal=0;
+        /// <summary>
+        /// Слово
+        /// </summary>
+        string description=null;
+        /// <summary>
+        /// Набор фреймов
+        /// </summary>
+        Frame[] frames=null;
 
-         Frame[] frames;
+        //double[,] Matrix_mfcc;
+        double[] Matrix_mfcc=null;
 
-         //double[,] Matrix_mfcc;
-         double[] Matrix_mfcc;
-
+        /// <summary>
+        /// Св-во для доступа к нормализованным данным
+        /// </summary>
         public double[] NormData
         {
             get { return normalizedData; }
             set { normalizedData = value; }
+        }
+
+        /// <summary>
+        /// Св-во для доступа к содержанию мр3 файла
+        /// </summary>
+        public byte[] Mp3byte
+        {
+            get { return bdata; }
+            set { bdata = value; }
+        }
+
+        /// <summary>
+        /// Св-во для доступа к слову
+        /// </summary>
+        public string Word
+        {
+            get { return description; }
+            set { description = value; }
         }
 
         public Frame [] Frames
@@ -71,7 +104,19 @@ namespace Speech_Example
             double Ns = Math.Round( 1E-3*Ts*fs );
            int L = normalizedData.Length;                
            double  M = Math.Floor((L-Nw)/Ns+1);
-           int num = Convert.ToInt32(L / M)*2;
+            int num=0;
+            double m = M;
+            bool flag = true;
+           while(flag)
+           {
+               if (L % m == 0)
+               {
+                   num = Convert.ToInt32(L / m) * 2;
+                   flag = false;
+               }
+               else
+                   m = m - 1;
+           }
            //frames = new Frame[(int)M];
            //int j = 0;
            //for (int i = 0; i < frames.Length; i++)
@@ -98,7 +143,17 @@ namespace Speech_Example
                    j++;
                }
                i++;
-               f.Add(new Frame(mas));
+               bool a = mas.All(element => element == 0);
+               if (!a)
+               {
+                   double[] masmf = MFCC.transform(mas, 0, (UInt32)mas.Length, 13, 44100, 300, 8000);
+                   if (masmf[0].ToString() !="-бесконечность")
+                   {
+                       f.Add(new Frame(mas, masmf));
+                   }
+                   
+               }
+
            }
            frames = f.ToArray();
         }
@@ -161,7 +216,7 @@ namespace Speech_Example
                      }
                   }
             }
-            rawData = rdata.ToArray();
+            //rawData = rdata.ToArray();
             normalizedData = new double[rdata.Count];
             double maxAbs = Math.Max(Math.Abs(maxVal), Math.Abs(minVal));
             for (Int32 i = 0; i < rdata.Count; i++)
@@ -197,7 +252,12 @@ namespace Speech_Example
             return data.ToArray();
         }
 
-        public static double[] Read_PCM(string filename)
+        /// <summary>
+        /// Считывание, декодирование и нормализация данных, полученных из мр3 файла
+        /// </summary>
+        /// <param name="filename">Имя мр3 файла</param>
+        /// <param name="desc">Слово</param>
+        public void Read_PCM(string filename)
         {
           //  Alvas.Audio.DsReader dr = new Alvas.Audio.DsReader(filename);
             //IntPtr formatPcm = dr.ReadFormat();
@@ -214,6 +274,7 @@ namespace Speech_Example
             Alvas.Audio.Mp3Reader mr = new Alvas.Audio.Mp3Reader(File.OpenRead(filename));
             IntPtr formatMp3 = mr.ReadFormat();
             byte[] dataMp3 = mr.ReadData();
+            bdata = dataMp3;
             mr.Close();
             IntPtr formatPcm = Alvas.Audio.AudioCompressionManager.GetCompatibleFormat(formatMp3, Alvas.Audio.AudioCompressionManager.PcmFormatTag);
             //mp3 -> pcm
@@ -231,7 +292,7 @@ namespace Speech_Example
 
             //return null;
 
-            return data.ToArray();
+            normalizedData= data.ToArray();
 
         }
 

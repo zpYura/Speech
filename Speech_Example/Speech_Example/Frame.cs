@@ -9,10 +9,17 @@ namespace Speech_Example
     class Frame
     {
         double[] data;
+        double[] mfcc;
 
         public Frame(double [] t)
         {
             data = t;
+        }
+
+        public Frame(double[] t, double [] mfcc)
+        {
+            data = t;
+            this.mfcc = mfcc;
         }
 
         public double[] Data
@@ -20,6 +27,12 @@ namespace Speech_Example
             get { return data; }
             set { data = value; }
     }
+
+        public double[] MFCC
+        {
+            get { return mfcc; }
+            set { mfcc = value; }
+        }
 
     }
 }

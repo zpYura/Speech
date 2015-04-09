@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NPlot;
+using System.IO;
 
 
 namespace Speech_Example
@@ -30,7 +31,7 @@ namespace Speech_Example
                 plotSurface2D1.Title = "Wave";
                 string fileName = openFileDialog1.FileName;
                 Mfile = new MP3();
-                Mfile.NormData = MP3.Read_PCM(fileName);
+                Mfile.Read_PCM(fileName);
                 double[] time = new double[Mfile.NormData.Length];
                 for (int i = 0; i < time.Length; i++)
                     time[i] = (double)i / 44100;
@@ -49,7 +50,7 @@ namespace Speech_Example
                 npPlot1.Color = Color.Blue;
                 npPlot1.Label = "Timeseries 1";
                 plotSurface2D1.Add(npPlot1, NPlot.PlotSurface2D.XAxisPosition.Bottom, NPlot.PlotSurface2D.YAxisPosition.Left);
-                button2.Enabled = true;
+               
             }
             
            }
@@ -57,18 +58,49 @@ namespace Speech_Example
         private void button2_Click(object sender, EventArgs e)
         {
             Mfile.Get_frames(10, 25, 44100);
+            Mfile.Word = comboBox1.Text;
             for (int i = 0; i < Mfile.Frames.Length; i++)
             {
-                double[] mas = MFCC.transform(Mfile.Frames[i].Data, 0, (UInt32)Mfile.Frames[i].Data.Length, 13, 44100, 300, 8000);
-                
+                double[] mas = Mfile.Frames[i].MFCC;
+
                 dataGridView1.Columns.Add("MFCC" + i.ToString(), "MFCC" + i.ToString());
-                if(dataGridView1.ColumnCount==1)
+                if (dataGridView1.ColumnCount == 1)
                     dataGridView1.Rows.Add(mas.Length - 1);
                 for (int j = 0; j < mas.Length; j++)
                 {
                     dataGridView1[dataGridView1.ColumnCount - 1, j].Value = mas[j];
-                    
+
                 }
+            }
+
+            DataBase.Insert_values(Mfile, Convert.ToInt32(textBox1.Text));
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            button2.Enabled = true;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+
+                string[] s=openFileDialog1.FileNames;
+                string[] s1={ "Пять", "Один","Семь","Шесть","Два" };
+                int j=0;
+                for (int i = 0; i < s.Length; i++)
+                {
+                     MP3 M = new MP3();
+                    M.Read_PCM(s[i]);
+                    M.Get_frames(10, 25, 44100);
+                  
+                    M.Word = s1[j];
+                    if ((i + 1) % 5 == 0)
+                        j++;
+                    DataBase.Insert_values(M, i+1);
+                }
+
             }
         }
     }
