@@ -81,6 +81,11 @@ namespace Speech_Example
             button2.Enabled = true;
         }
 
+        /// <summary>
+        /// Добавление тестовой базы в бд, использовать только с подготовленными данными, смотри папку Record/Base/I
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -102,6 +107,12 @@ namespace Speech_Example
                 }
 
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            MP3 [] d= DataBase.Read_from_baze();
+            Clasterization.Kmeans(d, 2000, 10, 10);
         }
     }
 }
