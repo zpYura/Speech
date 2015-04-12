@@ -113,6 +113,7 @@ namespace Speech_Example
         {
             MP3 [] d= DataBase.Read_from_baze();
             Clasterization.Kmeans(d, 2000, 10, 10);
+            Clasterization.MakeAdaptation(10, d);
         }
     }
 }
