@@ -31,7 +31,7 @@ namespace Speech_Example
         /// </summary>
         Frame[] frames=null;
 
-        //double[,] Matrix_mfcc;
+        public static double[,] Matrixd;
         double[] Matrix_mfcc=null;
 
         /// <summary>

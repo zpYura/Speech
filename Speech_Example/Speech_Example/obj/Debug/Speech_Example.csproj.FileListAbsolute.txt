@@ -12,3 +12,4 @@ D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speec
 D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.exe
 D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.pdb
 D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\obj\Debug\Speech_Example.csprojResolveAssemblyReference.cache
+D:\Мои документы\Универ\РПБДИС\Курсач\Speech\Speech_Example\Speech_Example\bin\Debug\alglibnet2.dll

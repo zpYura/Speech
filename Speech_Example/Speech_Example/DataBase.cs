@@ -64,6 +64,12 @@ namespace Speech_Example
         public static MP3 [] Read_from_baze()
         {
             SqlConnection connect = new SqlConnection();
+            Dictionary<string, int> dic = new Dictionary<string, int>();
+            dic.Add("Один", 0);
+            dic.Add("Два", 1);
+            dic.Add("Пять", 2);
+            dic.Add("Шесть", 3);
+            dic.Add("Семь", 4);
             connect.ConnectionString = "Data Source=.;Initial Catalog=Speech;Integrated Security=True";
             string query = "SELECT Description,MP3.Mp3_id,Coef1,Coef2,Coef3,Coef4,Coef5,Coef6,Coef7,Coef8,Coef9,Coef10,Coef11,Coef12,Coef13 FROM MFCC inner join MP3 on MFCC.Mp3_id=MP3.Mp3_id Order by MP3.Mp3_id";
             try
@@ -74,6 +80,7 @@ namespace Speech_Example
                 List<MP3> listmp3 = new List<MP3>();
                 //List<Frame> lframe = new List<Frame>();
                 List<double> data = new List<double>();
+                List<double> all_data = new List<double>();
                 int id = 0;
                 string descr = "";
                 while (Reader.Read() == true)
@@ -88,6 +95,17 @@ namespace Speech_Example
                     {
                         MP3 m = new MP3();
                         // в поле где раньше хранилсь нормализированные данные из мр3 файла записываем значения всех mfcc коэффициентов
+
+                        //m.Matrixd = new double[data.Count / 13, 13];
+                        //int k=0;
+                        //for (int i = 0; i < m.Matrixd.GetLength(0); i++)
+                        //{
+                          //  for (int j = 0; j < m.Matrixd.GetLength(1); j++)
+                            //{
+                              //  m.Matrixd[i, j] = data[k];
+                                //k++;
+                            //}
+                        //}
                         m.NormData = data.ToArray();
                         m.Word = descr;
                         data.Clear();
@@ -99,7 +117,12 @@ namespace Speech_Example
                     if (id == Convert.ToInt32(Reader.GetValue(1)))
                     {
                         for (int i = 2; i < 15; i++)
+                        { 
                             data.Add(Convert.ToDouble(Reader.GetValue(i)));
+                          //  all_data.Add(Convert.ToDouble(Reader.GetValue(i))); 
+                        }
+                        //if(descr!="")
+                        //all_data.Add(dic[descr]);
                     }
 
 
@@ -114,7 +137,18 @@ namespace Speech_Example
                 listmp3.Add(m1);
 
                 Reader.Close();
+                //MP3.Matrixd = new double[all_data.Count / 14, 14];
+                //int k = 0;
+                //for (int i = 0; i < MP3.Matrixd.GetLength(0); i++)
+                //{
+                //    for (int j = 0; j < MP3.Matrixd.GetLength(1); j++)
+                //    {
+                //        MP3.Matrixd[i, j] = all_data[k];
+                //        k++;
+                //    }
+                //}
                 return listmp3.ToArray();
+               
             }
             catch (Exception e)
             {

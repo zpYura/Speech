@@ -112,8 +112,47 @@ namespace Speech_Example
         private void button3_Click(object sender, EventArgs e)
         {
             MP3 [] d= DataBase.Read_from_baze();
-            Clasterization.Kmeans(d, 2000, 10, 10);
-            Clasterization.MakeAdaptation(10, d);
+            int w=0;
+            double [,] c=null;
+            int [] xyc=null;
+            string descr =d[0].Word;
+            Dictionary<string, double[,]> dict = new Dictionary<string, double[,]>();
+            int q=0;
+            int s = 0;
+            while (q < 5)
+            { 
+                
+                List<double> data = new List<double>();
+                while (s < d.Length && descr == d[s].Word)
+                {
+                    //foreach (double dd in d[s].NormData)
+
+                    for (int z = 0; z < d[s].NormData.Length;z++ )
+                        data.Add(d[s].NormData[z]);
+                    s++;
+                }
+        
+                double[,] Matrixd = new double[data.Count / 13, 13];
+                int k=0;
+                for (int i = 0; i < Matrixd.GetLength(0); i++)
+                {
+                for (int j = 0; j < Matrixd.GetLength(1); j++)
+                {
+                 Matrixd[i, j] = data[k];
+                k++;
+                }
+                }
+                dict.Add(descr, Matrixd);
+                if(s<d.Length)
+                descr = d[s].Word;
+                q++;      
+            }
+
+            Dictionary<string, double[,]> super = new Dictionary<string, double[,]>();
+            alglib.kmeansgenerate(dict["Пять"], dict["Пять"].GetLength(0), dict["Пять"].GetLength(1), 10, 2, out w, out c, out xyc);
+                // alglib.lda.fisherldan(MP3.Matrixd, MP3.Matrixd.GetLength(0), 13, 5, ref i, ref c);
+                Clasterization.Kmeans(d, 2000, 10, 10);
+            //Clasterization.MakeAdaptation(10, d);
         }
     }
 }

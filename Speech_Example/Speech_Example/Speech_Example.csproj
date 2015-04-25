@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="alglibnet2">
+      <HintPath>..\..\..\..\..\..\..\alglibnet2.dll</HintPath>
+    </Reference>
     <Reference Include="Alvas.Audio">
       <HintPath>..\..\..\Alvas\bin\Alvas.Audio.dll</HintPath>
     </Reference>
