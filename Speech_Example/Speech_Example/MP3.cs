@@ -31,8 +31,8 @@ namespace Speech_Example
         /// </summary>
         Frame[] frames=null;
 
-        public static double[,] Matrixd;
-        double[] Matrix_mfcc=null;
+        //public double[,] Matrixd;
+        double[,] Matrix_mfcc=null;
 
         /// <summary>
         /// Св-во для доступа к нормализованным данным
@@ -67,7 +67,7 @@ namespace Speech_Example
            
         }
 
-        public double[] Matrix
+        public double[,] Matrix
         {
             get { return Matrix_mfcc; }
         }
@@ -159,22 +159,22 @@ namespace Speech_Example
         }
 
 
-        public void Get_matrix( int mfccSize, UInt32 frequency, UInt32 freqMin, UInt32 freqMax)
+        public void Get_matrix(int mfccSize)
         {
 
-            Matrix_mfcc = new double[mfccSize*frames.Length];
-            int k=0;
-            for (int i = 0; i < frames.Length; i++)
+            Matrix_mfcc = new double[frames.Length, mfccSize];
+            for (int i = 0; i < Matrix_mfcc.GetLength(0); i++)
             {
-                double[] mas = MFCC.transform(frames[i].Data, 0, (UInt32)frames[i].Data.Length, mfccSize, frequency, freqMin, freqMax);
-                for (int j = 0; j < mas.Length; j++)
+                for (int j = 0; j < Matrix_mfcc.GetLength(1); j++)
                 {
-                    Matrix_mfcc[k] = mas[j];
-                    k++;
+                    Matrix_mfcc[i, j] = frames[i].MFCC[j];
                 }
             }
+           
 
         }
+
+
         public void Read_MP3(string filename)
         { 
             NAudio.Wave.Mp3FileReader read = new NAudio.Wave.Mp3FileReader(filename);

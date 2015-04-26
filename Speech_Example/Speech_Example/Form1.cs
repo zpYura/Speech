@@ -59,6 +59,7 @@ namespace Speech_Example
         {
             Mfile.Get_frames(10, 25, 44100);
             Mfile.Word = comboBox1.Text;
+            Mfile.Get_matrix(13);
             for (int i = 0; i < Mfile.Frames.Length; i++)
             {
                 double[] mas = Mfile.Frames[i].MFCC;
@@ -73,7 +74,7 @@ namespace Speech_Example
                 }
             }
 
-            DataBase.Insert_values(Mfile, Convert.ToInt32(textBox1.Text));
+           // DataBase.Insert_values(Mfile, Convert.ToInt32(textBox1.Text));
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -114,6 +115,10 @@ namespace Speech_Example
             MP3 [] d= DataBase.Read_from_baze();
             int w=0;
             double [,] c=null;
+            double[,] c1 = null;
+            double[,] c2 = null;
+            double[,] c3= null;
+            double[,] c4 = null;
             int [] xyc=null;
             string descr =d[0].Word;
             Dictionary<string, double[,]> dict = new Dictionary<string, double[,]>();
@@ -150,8 +155,23 @@ namespace Speech_Example
 
             Dictionary<string, double[,]> super = new Dictionary<string, double[,]>();
             alglib.kmeansgenerate(dict["Пять"], dict["Пять"].GetLength(0), dict["Пять"].GetLength(1), 10, 2, out w, out c, out xyc);
+            super.Add("Пять", c);
+            alglib.kmeansgenerate(dict["Один"], dict["Один"].GetLength(0), dict["Один"].GetLength(1), 10, 2, out w, out c1, out xyc);
+            super.Add("Один", c1);
+            alglib.kmeansgenerate(dict["Два"], dict["Два"].GetLength(0), dict["Два"].GetLength(1), 10, 2, out w, out c2, out xyc);
+            super.Add("Два", c2);
+            alglib.kmeansgenerate(dict["Шесть"], dict["Шесть"].GetLength(0), dict["Шесть"].GetLength(1), 10, 2, out w, out c3, out xyc);
+            super.Add("Шесть", c3);
+            alglib.kmeansgenerate(dict["Семь"], dict["Семь"].GetLength(0), dict["Семь"].GetLength(1), 10, 2, out w, out c4, out xyc);
+            super.Add("Семь", c4);
+
+            double[,] res = null;
+            alglib.kmeansgenerate(Mfile.Matrix, Mfile.Matrix.GetLength(0), Mfile.Matrix.GetLength(1), 10, 2, out w, out res, out xyc);
+          // string answer= Clasterization.recogn(super, res);
+           string answer = Clasterization.recogn_mat(super, res);
+           MessageBox.Show("Распознанное слово - "+answer, "Распознание", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 // alglib.lda.fisherldan(MP3.Matrixd, MP3.Matrixd.GetLength(0), 13, 5, ref i, ref c);
-                Clasterization.Kmeans(d, 2000, 10, 10);
+            //    Clasterization.Kmeans(d, 2000, 10, 10);
             //Clasterization.MakeAdaptation(10, d);
         }
     }
