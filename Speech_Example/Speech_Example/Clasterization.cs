@@ -383,7 +383,7 @@ namespace Speech_Example
                 d.Add(s);
             }
 
-            e = Math.Abs(d[1]-d[0]);
+            e = d[0];
             return e;
         }
 

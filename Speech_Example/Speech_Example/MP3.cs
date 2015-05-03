@@ -70,6 +70,7 @@ namespace Speech_Example
         public double[,] Matrix
         {
             get { return Matrix_mfcc; }
+            set { Matrix_mfcc = value; }
         }
 
         public void Write()
