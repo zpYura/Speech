@@ -79,7 +79,7 @@ namespace Speech_Example
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            button2.Enabled = true;
+            //button2.Enabled = true;
         }
 
         /// <summary>
@@ -218,6 +218,12 @@ namespace Speech_Example
                 // alglib.lda.fisherldan(MP3.Matrixd, MP3.Matrixd.GetLength(0), 13, 5, ref i, ref c);
             //    Clasterization.Kmeans(d, 2000, 10, 10);
             //Clasterization.MakeAdaptation(10, d);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Recognize r = new Recognize();
+            r.Show();
         }
     }
 }
