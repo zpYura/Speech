@@ -106,17 +106,17 @@ namespace Speech_Example
            int L = normalizedData.Length;                
            double  M = Math.Floor((L-Nw)/Ns+1);
             int num=0;
-            double m = M;
+            //double m = M;
             bool flag = true;
            while(flag)
            {
-               if (L % m == 0)
+               if (L % M == 0)
                {
-                   num = Convert.ToInt32(L / m) * 2;
+                   num = Convert.ToInt32(L / M) * 2;
                    flag = false;
                }
                else
-                   m = m - 1;
+                  M = M - 1;
            }
            //frames = new Frame[(int)M];
            //int j = 0;
@@ -131,30 +131,47 @@ namespace Speech_Example
            //    }
            //    frames[i] = new Frame(mas);
            //}
+            
            List<Frame> f = new List<Frame>();
            int j = 0;
            int i = 0;
-           while (j < normalizedData.Length)
+           if (M >=2)
            {
-               double[] mas = new double[num];
-               j = i * num / 2;
-               for (int k = 0; k < num; k++)
+               while (j < normalizedData.Length)
                {
-                   mas[k] = normalizedData[j];
-                   j++;
+                   double[] mas = new double[num];
+                   j = i * num / 2;
+                   for (int k = 0; k < num; k++)
+                   {
+                       mas[k] = normalizedData[j];
+                       j++;
+                   }
+                   i++;
+                   bool a = mas.All(element => element == 0);
+                   if (!a)
+                   {
+                       double[] masmf = MFCC.transform(mas, 0, (UInt32)mas.Length, 13, 44100, 300, 8000);
+                       if (masmf[0].ToString() != "-бесконечность")
+                       {
+                           f.Add(new Frame(mas, masmf));
+                       }
+
+                   }
+
                }
-               i++;
-               bool a = mas.All(element => element == 0);
+           }
+           else
+           {
+               bool a = normalizedData.All(element => element == 0);
                if (!a)
                {
-                   double[] masmf = MFCC.transform(mas, 0, (UInt32)mas.Length, 13, 44100, 300, 8000);
-                   if (masmf[0].ToString() !="-бесконечность")
+                   double[] masmf = MFCC.transform(normalizedData, 0, (UInt32)normalizedData.Length, 13, 44100, 300, 8000);
+                   if (masmf[0].ToString() != "-бесконечность" && masmf[0].ToString() != "NaN")
                    {
-                       f.Add(new Frame(mas, masmf));
+                       f.Add(new Frame(normalizedData, masmf));
                    }
-                   
-               }
 
+               }
            }
            frames = f.ToArray();
         }
@@ -287,8 +304,12 @@ namespace Speech_Example
                 short sample = (short)((dataPcm1[i + 1] << 8) | dataPcm1[i + 0]);
                 /* short sample2 = BitConverter.ToInt16(buffer, index);
                 Debug.Assert(sample == sample2, "Oops"); */
-                float sample32 = sample / 32768f;
-                data.Add(sample32);
+
+                if (Math.Abs(sample) >1000)
+                {
+                    float sample32 = sample / 32768f;
+                    data.Add(sample32);
+                }
             }
 
             //return null;

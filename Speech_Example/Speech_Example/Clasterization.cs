@@ -379,6 +379,7 @@ namespace Speech_Example
                 for (int i = 0; i < data.GetLength(0); i++)
                 {
                    s=s+ Math.Sqrt(Math.Pow(data[i,j] - res[i,j], 2));
+                    //s = s + Math.Log(Math.Abs(data[i, j] - res[i, j]),2);
                 }
                 d.Add(s);
             }

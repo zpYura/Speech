@@ -102,7 +102,7 @@ namespace Speech_Example
                     M.Get_frames(10, 25, 44100);
                   
                     M.Word = s1[j];
-                    if ((i + 1) % 8 == 0)
+                    if ((i + 1) % 40 == 0)
                         j++;
                     DataBase.Insert_values(M, i+1);
                 }

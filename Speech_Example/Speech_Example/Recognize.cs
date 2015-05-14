@@ -47,9 +47,12 @@ namespace Speech_Example
         {
             short sample = (short)((e.Buffer[index + 1] << 8) | 
                                     e.Buffer[index + 0]);
-           float sample32 = sample / 32768f;
-           //ProcessSample(sample32);
-           data.Add(sample32);
+            if (Math.Abs(sample) > 1000 )
+            {
+                float sample32 = sample / 32768f;
+                //ProcessSample(sample32);
+                data.Add(sample32);
+            }
         }
         }
 
