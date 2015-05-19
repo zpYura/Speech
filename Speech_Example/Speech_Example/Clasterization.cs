@@ -378,13 +378,13 @@ namespace Speech_Example
                 double s = 0;
                 for (int i = 0; i < data.GetLength(0); i++)
                 {
-                   s=s+ Math.Sqrt(Math.Pow(data[i,j] - res[i,j], 2));
+                    s = s + Math.Pow(data[i, j] - res[i, j], 2);
                     //s = s + Math.Log(Math.Abs(data[i, j] - res[i, j]),2);
                 }
                 d.Add(s);
             }
-
-            e = d[0];
+            //e = Math.Sqrt(Math.Pow(data[0, 0] - res[0, 0], 2) + Math.Pow(data[1, 0] - res[1, 0], 2) + Math.Pow(data[2, 0] - res[2, 0], 2) + Math.Pow(data[3, 0] - res[3, 0], 2) + Math.Pow(data[4, 0] - res[4, 0], 2) + Math.Pow(data[5, 0] - res[5, 0], 2) + Math.Pow(data[6, 0] - res[6, 0], 2) + Math.Pow(data[7, 0] - res[7, 0], 2) + Math.Pow(data[8, 0] - res[8, 0], 2) + Math.Pow(data[9, 0] - res[9, 0], 2) + Math.Pow(data[10, 0] - res[10, 0], 2) + Math.Pow(data[11, 0] - res[11, 0], 2) + Math.Pow(data[12, 0] - res[12, 0], 2));
+            e = Math.Sqrt(d[0]);
             return e;
         }
 

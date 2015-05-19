@@ -50,7 +50,7 @@ namespace Speech_Example
                 npPlot1.Color = Color.Blue;
                 npPlot1.Label = "Timeseries 1";
                 plotSurface2D1.Add(npPlot1, NPlot.PlotSurface2D.XAxisPosition.Bottom, NPlot.PlotSurface2D.YAxisPosition.Left);
-               
+                button2.Enabled = true;
             }
             
            }
@@ -73,13 +73,12 @@ namespace Speech_Example
 
                 }
             }
-
-           // DataBase.Insert_values(Mfile, Convert.ToInt32(textBox1.Text));
+            button3.Enabled = true;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //button2.Enabled = true;
+            button6.Enabled = true;
         }
 
         /// <summary>
@@ -89,24 +88,29 @@ namespace Speech_Example
         /// <param name="e"></param>
         private void button4_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() == DialogResult.OK && textBox1.Text.Length != 0)
             {
 
-                string[] s=openFileDialog1.FileNames;
-                string[] s1={ "Пять", "Один","Семь","Шесть","Два" };
-                int j=0;
+                string[] s = openFileDialog1.FileNames;
+                string[] s1 = { "Пять", "Один", "Семь", "Шесть", "Два" };
+                int j = 0;
+                int Id = DataBase.GetId();
                 for (int i = 0; i < s.Length; i++)
                 {
-                     MP3 M = new MP3();
+                    MP3 M = new MP3();
                     M.Read_PCM(s[i]);
                     M.Get_frames(10, 25, 44100);
-                  
+                    M.Get_matrix(13);
                     M.Word = s1[j];
-                    if ((i + 1) % 40 == 0)
+                    if ((i + 1) % Convert.ToInt32(textBox1.Text) == 0)
                         j++;
-                    DataBase.Insert_values(M, i+1);
+                    DataBase.Insert_values(M,Id+ i + 1);
                 }
 
+            }
+            else
+            {
+                MessageBox.Show("Убедитесь, что вы выбрали файлы нужного формата и заполнили поле <Колиество записей одного слова>", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -164,7 +168,9 @@ namespace Speech_Example
             //super.Add("Шесть", c3);
             //alglib.kmeansgenerate(dict["Семь"], dict["Семь"].GetLength(0), dict["Семь"].GetLength(1), 10, 2, out w, out c4, out xyc);
             //super.Add("Семь", c4);
-            for (int s = 0; s < d.Length; s++)
+            
+           // Норма
+            /*for (int s = 0; s < d.Length; s++)
             {
                 List<double> data = new List<double>();
              for (int z = 0; z < d[s].NormData.Length;z++ )
@@ -180,7 +186,8 @@ namespace Speech_Example
                  }
              }
              d[s].Matrix = Matrixd;
-            }
+            }*/
+        
             int w = 0;
            
             int[] xyc = null;
@@ -191,8 +198,8 @@ namespace Speech_Example
             for (int s = 0; s < d.Length&&endflag; s++)
             {
                 double[,] c = null;
-                alglib.kmeansgenerate(d[s].Matrix, d[s].Matrix.GetLength(0), d[s].Matrix.GetLength(1), 1, 2, out w, out c, out xyc);
-               double answer= Clasterization.euclid(c, res);
+               // alglib.kmeansgenerate(d[s].Matrix, d[s].Matrix.GetLength(0), d[s].Matrix.GetLength(1), 1, 2, out w, out c, out xyc);
+               double answer= Clasterization.euclid(d[s].Matrix, res);
                min[s] = answer;
                //if (answer < 1 && answer > 0)
               // {
@@ -224,6 +231,17 @@ namespace Speech_Example
         {
             Recognize r = new Recognize();
             r.Show();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            Mfile.Word = comboBox1.Text;
+            DataBase.Insert_values(Mfile, DataBase.GetId() + 1);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            button4.Enabled = true;
         }
     }
 }

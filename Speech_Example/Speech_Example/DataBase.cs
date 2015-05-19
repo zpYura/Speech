@@ -32,22 +32,26 @@ namespace Speech_Example
             {
                 connect.Open();
                 command.ExecuteNonQuery();
+                int w = 0;
 
-                for (int j = 0; j < mp3file.Frames.Length; j++)
-                {
+                int[] xyc = null;
+                double[,] res = null;
+                alglib.kmeansgenerate(mp3file.Matrix, mp3file.Matrix.GetLength(0), mp3file.Matrix.GetLength(1), 1, 2, out w, out res, out xyc);
+                //for (int j = 0; j < mp3file.Frames.Length; j++)
+                //{
                     SqlCommand command2 = new SqlCommand("INSERT MFCC (Coef1,Coef2,Coef3,Coef4,Coef5,Coef6,Coef7,Coef8,Coef9,Coef10,Coef11,Coef12,Coef13,Mp3_id) VALUES (@coef1,@coef2,@coef3,@coef4,@coef5,@coef6,@coef7,@coef8,@coef9,@coef10,@coef11,@coef12,@coef13,@id)", connect);
                     SqlParameter[] mpar = new SqlParameter[13];
                     for (int i = 0; i < mpar.Length; i++)
                     {
                         mpar[i] = new SqlParameter("coef" + (i + 1).ToString(), SqlDbType.Float);
-                        mpar[i].Value = (float)mp3file.Frames[j].MFCC[i];
+                        mpar[i].Value = (float)res[i,0];
                     }
                     command2.Parameters.AddRange(mpar);
                     SqlParameter sqid = new SqlParameter("@id", SqlDbType.Int);
                     sqid.Value = id;
                     command2.Parameters.Add(sqid);
                     command2.ExecuteNonQuery();
-                }
+                //}
             }
             catch (Exception e)
             {
@@ -78,7 +82,6 @@ namespace Speech_Example
                 SqlCommand command = new SqlCommand(query, connect);
                 var Reader = command.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
                 List<MP3> listmp3 = new List<MP3>();
-                //List<Frame> lframe = new List<Frame>();
                 List<double> data = new List<double>();
                 List<double> all_data = new List<double>();
                 int id = 0;
@@ -95,19 +98,10 @@ namespace Speech_Example
                     {
                         MP3 m = new MP3();
                         // в поле где раньше хранилсь нормализированные данные из мр3 файла записываем значения всех mfcc коэффициентов
-
-                        //m.Matrixd = new double[data.Count / 13, 13];
-                        //int k=0;
-                        //for (int i = 0; i < m.Matrixd.GetLength(0); i++)
-                        //{
-                          //  for (int j = 0; j < m.Matrixd.GetLength(1); j++)
-                            //{
-                              //  m.Matrixd[i, j] = data[k];
-                                //k++;
-                            //}
-                        //}
-                        m.NormData = data.ToArray();
-                        m.Word = descr;
+                        m.Matrix = new double[data.Count, 1];
+                        for (int h = 0; h < data.Count; h++)
+                            m.Matrix[h, 0] = data[h];
+                            m.Word = descr;
                         data.Clear();
                         listmp3.Add(m);
                         id = Convert.ToInt32(Reader.GetValue(1));
@@ -119,10 +113,8 @@ namespace Speech_Example
                         for (int i = 2; i < 15; i++)
                         { 
                             data.Add(Convert.ToDouble(Reader.GetValue(i)));
-                          //  all_data.Add(Convert.ToDouble(Reader.GetValue(i))); 
+                          
                         }
-                        //if(descr!="")
-                        //all_data.Add(dic[descr]);
                     }
 
 
@@ -131,22 +123,15 @@ namespace Speech_Example
 
                 MP3 m1 = new MP3();
                 // в поле где раньше хранилсь нормализированные данные из мр3 файла записываем значения всех mfcc коэффициентов
-                m1.NormData = data.ToArray();
+                m1.Matrix = new double[data.Count, 1];
+                for (int h = 0; h < data.Count; h++)
+                    m1.Matrix[h, 0] = data[h];
                 m1.Word = descr;
                 data.Clear();
                 listmp3.Add(m1);
 
                 Reader.Close();
-                //MP3.Matrixd = new double[all_data.Count / 14, 14];
-                //int k = 0;
-                //for (int i = 0; i < MP3.Matrixd.GetLength(0); i++)
-                //{
-                //    for (int j = 0; j < MP3.Matrixd.GetLength(1); j++)
-                //    {
-                //        MP3.Matrixd[i, j] = all_data[k];
-                //        k++;
-                //    }
-                //}
+
                 return listmp3.ToArray();
                
             }
@@ -182,6 +167,23 @@ namespace Speech_Example
             {
                 connect.Close();
             }
+        }
+
+        public static int GetId()
+        {
+            SqlConnection connect = new SqlConnection();
+            connect.ConnectionString = "Data Source=.;Initial Catalog=Speech;Integrated Security=True";
+            string query = "SELECT Mp3_id FROM MFCC  MP3 Order by MP3.Mp3_id DESC";
+            connect.Open();
+            SqlCommand command = new SqlCommand(query, connect);
+            var Reader = command.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
+            
+            int Id = 0;
+            if(Reader.Read()==true)
+                Id= Convert.ToInt32(Reader.GetValue(0));
+            Reader.Close();
+            connect.Close();
+            return Id;
         }
     }
 }

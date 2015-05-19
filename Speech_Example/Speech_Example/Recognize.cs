@@ -28,31 +28,32 @@ namespace Speech_Example
             waveIn.DataAvailable += waveIn_DataAvailable;
             waveIn.RecordingStopped += new EventHandler<StoppedEventArgs>(waveIn_RecordingStopped);
             waveIn.WaveFormat = new WaveFormat(44100, 1);
-            //writer = new WaveFileWriter(outputFilename, waveIn.WaveFormat);
-
             waveIn.StartRecording();
           
         }
 
         WaveIn waveIn;
-        //WaveFileWriter writer;
-        //string outputFilename = "D:/demo.wav";
         List<double> data = new List<double>();
         MP3 Mfile;
 
         void waveIn_DataAvailable(object sender, WaveInEventArgs e)
         {
-           // writer.WriteData(e.Buffer, 0, e.BytesRecorded);
            for (int index = 0; index < e.BytesRecorded; index += 2)
         {
-            short sample = (short)((e.Buffer[index + 1] << 8) | 
-                                    e.Buffer[index + 0]);
-            if (Math.Abs(sample) > 1000 )
+            short sample=0;
+            try
             {
-                float sample32 = sample / 32768f;
-                //ProcessSample(sample32);
-                data.Add(sample32);
+                sample = (short)((e.Buffer[index + 1] << 8) |
+                                       e.Buffer[index + 0]);
+
+
+                if (Math.Abs(sample) > 1000)
+                {
+                    float sample32 = sample / 32768f;
+                    data.Add(sample32);
+                }
             }
+            catch { }
         }
         }
 
@@ -60,8 +61,6 @@ namespace Speech_Example
         {
             waveIn.Dispose();
             waveIn = null;
-          //  writer.Close();
-            //writer = null;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -70,7 +69,6 @@ namespace Speech_Example
 
             int g = data.Count;
             Mfile = new MP3();
-            //Mfile.Read_PCM(fileName);
            Mfile.NormData = data.ToArray();
             double[] time = new double[Mfile.NormData.Length];
             for (int i = 0; i < time.Length; i++)
@@ -92,7 +90,6 @@ namespace Speech_Example
             plotSurface2D1.Add(npPlot1, NPlot.PlotSurface2D.XAxisPosition.Bottom, NPlot.PlotSurface2D.YAxisPosition.Left);
 
             Mfile.Get_frames(10, 25, 44100);
-           // Mfile.Word = comboBox1.Text;
             Mfile.Get_matrix(13);
         }
 
@@ -107,41 +104,19 @@ namespace Speech_Example
         {
             MP3[] d = DataBase.Read_from_baze();
             
-            for (int s = 0; s < d.Length; s++)
-            {
-                List<double> data = new List<double>();
-                for (int z = 0; z < d[s].NormData.Length; z++)
-                    data.Add(d[s].NormData[z]);
-                double[,] Matrixd = new double[data.Count / 13, 13];
-                int k = 0;
-                for (int i = 0; i < Matrixd.GetLength(0); i++)
-                {
-                    for (int j = 0; j < Matrixd.GetLength(1); j++)
-                    {
-                        Matrixd[i, j] = data[k];
-                        k++;
-                    }
-                }
-                d[s].Matrix = Matrixd;
-            }
+  
             int w = 0;
 
             int[] xyc = null;
             double[,] res = null;
             alglib.kmeansgenerate(Mfile.Matrix, Mfile.Matrix.GetLength(0), Mfile.Matrix.GetLength(1), 1, 2, out w, out res, out xyc);
-            bool endflag = true;
             double[] min = new double[d.Length];
-            for (int s = 0; s < d.Length && endflag; s++)
+            for (int s = 0; s < d.Length; s++)
             {
                 double[,] c = null;
-                alglib.kmeansgenerate(d[s].Matrix, d[s].Matrix.GetLength(0), d[s].Matrix.GetLength(1), 1, 2, out w, out c, out xyc);
-                double answer = Clasterization.euclid(c, res);
+               // alglib.kmeansgenerate(d[s].Matrix, d[s].Matrix.GetLength(0), d[s].Matrix.GetLength(1), 1, 2, out w, out c, out xyc);
+                double answer = Clasterization.euclid(d[s].Matrix, res);
                 min[s] = answer;
-                //if (answer < 1 && answer > 0)
-                // {
-                //  MessageBox.Show("Распознанное слово - " + d[s].Word, "Распознание", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                //    endflag = false;
-                //}
 
             }
             double min_m = min[0];
@@ -155,7 +130,44 @@ namespace Speech_Example
                 }
             }
             MessageBox.Show("Распознанное слово - " + d[n_min].Word, "Распознание", MessageBoxButtons.OK, MessageBoxIcon.Information);
-           
+            //Метод ближайших соседей
+            //double radius = 13;
+            //int[] etalons = new int[5];
+            //for (int s = 1; s < min.Length; s++)
+            //{
+            //    if (min[s] < radius)
+            //    {
+            //        switch (d[s].Word)
+            //        {
+            //            case "Пять": { etalons[0]++; } break;
+            //            case "Один": { etalons[1]++; } break;
+            //            case "Семь": { etalons[2]++; } break;
+            //            case "Шесть": { etalons[3]++; } break;
+            //            case "Два": { etalons[4]++; } break;
+            //        }
+            //    }
+            //}
+
+            //double min_m = etalons[0];
+            //int n_min = 0;
+            //for (int s = 1; s < etalons.Length; s++)
+            //{
+            //    if (etalons[s] > min_m)
+            //    {
+            //        min_m = etalons[s];
+            //        n_min = s;
+            //    }
+            //}
+            //string Word = "";
+            //switch (n_min)
+            //{
+            //    case 0: { Word = "Пять"; } break;
+            //    case 1: { Word = "Один"; } break;
+            //    case 2: { Word = "Семь"; } break;
+            //    case 3: { Word = "Шесть"; } break;
+            //    case 4: { Word = "Два"; } break;
+            //}
+            //MessageBox.Show("Распознанное слово - " + Word, "Распознание", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
     }

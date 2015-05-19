@@ -292,13 +292,13 @@ namespace Speech_Example
             Alvas.Audio.Mp3Reader mr = new Alvas.Audio.Mp3Reader(File.OpenRead(filename));
             IntPtr formatMp3 = mr.ReadFormat();
             byte[] dataMp3 = mr.ReadData();
-            bdata = dataMp3;
             mr.Close();
             IntPtr formatPcm = Alvas.Audio.AudioCompressionManager.GetCompatibleFormat(formatMp3, Alvas.Audio.AudioCompressionManager.PcmFormatTag);
             //mp3 -> pcm
             byte[] dataPcm1 = Alvas.Audio.AudioCompressionManager.Convert(formatMp3, formatPcm, dataMp3, false);
             List<double> data = new List<double>();
             int i = 0;
+            bdata = dataPcm1;
             for (i = 0; i < dataPcm1.Length - 1; i = i + 2)
             {
                 short sample = (short)((dataPcm1[i + 1] << 8) | dataPcm1[i + 0]);
