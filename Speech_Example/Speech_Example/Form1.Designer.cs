@@ -39,9 +39,10 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button6 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button6 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -166,6 +167,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.button4);
@@ -179,6 +181,33 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Добавление файлов в базу";
             // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(37, 247);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(119, 36);
+            this.button7.TabIndex = 13;
+            this.button7.Text = "Очистить базу";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 150);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(182, 13);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Количество записей одного слова";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(39, 175);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(118, 20);
+            this.textBox1.TabIndex = 11;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
             // button6
             // 
             this.button6.Enabled = false;
@@ -189,23 +218,6 @@
             this.button6.Text = "Добавить исходный файл";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(39, 175);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(118, 20);
-            this.textBox1.TabIndex = 11;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 150);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(182, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Количество записей одного слова";
             // 
             // groupBox2
             // 
@@ -241,7 +253,7 @@
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "База данных mp3 файлов";
+            this.Text = "Speech Recognizer";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -269,6 +281,7 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button button7;
     }
 }
 

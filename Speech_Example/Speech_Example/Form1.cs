@@ -16,6 +16,7 @@ namespace Speech_Example
     public partial class Form1 : Form
     {
         MP3 Mfile;
+        string fileName; 
         public Form1()
         {
             InitializeComponent();
@@ -29,7 +30,7 @@ namespace Speech_Example
             {
                 
                 plotSurface2D1.Title = "Wave";
-                string fileName = openFileDialog1.FileName;
+                 fileName = openFileDialog1.FileName;
                 Mfile = new MP3();
                 Mfile.Read_PCM(fileName);
                 double[] time = new double[Mfile.NormData.Length];
@@ -51,6 +52,8 @@ namespace Speech_Example
                 npPlot1.Label = "Timeseries 1";
                 plotSurface2D1.Add(npPlot1, NPlot.PlotSurface2D.XAxisPosition.Bottom, NPlot.PlotSurface2D.YAxisPosition.Left);
                 button2.Enabled = true;
+                string[] fil = fileName.Split('.');
+                fileName = fil[0];
             }
             
            }
@@ -218,7 +221,26 @@ namespace Speech_Example
                     n_min = s;
                 }
             }
-            MessageBox.Show("Распознанное слово - " + d[n_min].Word, "Распознание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            StreamWriter sr = new StreamWriter(fileName+"etalon.txt");
+            for (int i = 0; i < d[n_min].Matrix.GetLength(0); i++)
+            {
+                sr.WriteLine(d[n_min].Matrix[i, 0]);
+            }
+            sr.Close();
+            StreamWriter sr1 = new StreamWriter(fileName+".txt");
+            for (int i = 0; i < res.GetLength(0); i++)
+            {
+                sr1.WriteLine(res[i, 0]);
+            }
+            sr1.Close();
+            StreamWriter sr2 = new StreamWriter(fileName+"euclid.txt");
+            sr2.WriteLine("Номер эталона  " + n_min);
+            for (int i = 0; i < min.Length; i++)
+            {
+                sr2.WriteLine(i.ToString()+"  "+min[i].ToString());
+            }
+            sr2.Close();
+                 MessageBox.Show("Распознанное слово - " + d[n_min].Word, "Распознание", MessageBoxButtons.OK, MessageBoxIcon.Information);
           // string answer= Clasterization.recogn(super, res);
           // string answer = Clasterization.recogn_mat(super, res);
          //  MessageBox.Show("Распознанное слово - "+answer, "Распознание", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -242,6 +264,15 @@ namespace Speech_Example
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             button4.Enabled = true;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Вы действительно хотите удалить все записи из базы данных?", "Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+            {
+                DataBase.Delete();
+                MessageBox.Show("Данные успешно удалены", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

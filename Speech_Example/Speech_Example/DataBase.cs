@@ -148,16 +148,19 @@ namespace Speech_Example
            
         }
 
-        public static void Delete(string Tablename)
+        public static void Delete()
         {
             SqlConnection connect = new SqlConnection();
             connect.ConnectionString = "Data Source=.;Initial Catalog=Speech;Integrated Security=True";
-            string query = "DELETE FROM "+Tablename;
+            string query = "DELETE FROM MP3";
             SqlCommand command = new SqlCommand(query, connect);
+            string query1 = "DELETE FROM MFCC";
+            SqlCommand command1 = new SqlCommand(query1, connect);
             try
             {
                 connect.Open();
                 command.ExecuteNonQuery();
+                command1.ExecuteNonQuery();
             }
             catch (Exception e)
             {
